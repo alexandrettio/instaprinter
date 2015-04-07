@@ -7,8 +7,7 @@ from fpdf import Template
 import urllib2
 from urllib import urlencode
 import json
-from datetime import timedelta
-from datetime import date
+from datetime import datetime, date, time
 import time
 import sqlite3
 import os
@@ -18,6 +17,7 @@ import config
 CLIENT_ID = config.CLIENT_ID
 TAG = config.TAG
 
+current_print_interval_begin = int(time.time())-15*60
 def call_api_inst(method, params):
     url = "https://api.instagram.com/v1/%s?%s" % (method, urlencode(params))
     response = json.loads(urllib2.urlopen(url).read())
@@ -45,7 +45,7 @@ def create_pdf(smth):
     return
   if len(mtext) > 230:
     mtext = mtext[:230]+ '...'
-  mtext = re.sub(u'[^\u0020-\u00BF\u0410-\u0451F]', '', mtext)
+  mtext = re.sub(u'[^\u0020-\u00BF\u0410-\u0451]', '', mtext)
   mtype = smth['type']
   mid =  smth['id']
   if mtype != 'image':
@@ -54,17 +54,21 @@ def create_pdf(smth):
     os.popen ('curl %s > images/content.jpg' %mphotourl)
     os.popen ('curl %s > images/profile.jpg' %mprofilepicture)  
     f["address"] = config.address
-    f["avatar"] = "images/profile.jpg"
-    f["photo"] = "images/content.jpg"
+    f["avatar"] = '''.\images\profile.jpg'''
+    f["photo"] = '''.\images\content.jpg'''
     f["username"] = musername
-    f["logo"] = "images/logo.jpg"
-    f["place"] = "images/place.png"
+    f["logo"] = '''.\images\logo.jpg'''
+    f["place"] = '''.\images\place.png'''
     f["clubname"] = config.clubname
     f["phone"] = config.phone
     f["description"] = mtext
-    f.render('./results/%s.pdf' %mid)
-    os.popen ("lpr -P%s results/%s-5.pdf" %(config.printer_name, mid))
-
+    f.render('''.\results\%s.pdf''' %mid)
+    # os.popen ("lpr -P%s results/%s-5.pdf" %(config.printer_name, mid))
+    # os.popen ("move .\%s.pdf .\yesref" %mid)
+    os.popen ("acrord32.exe /n /t .\results\%s.pdf" %mid)
+    print "done %s.pdf" %mid
+    
+#Не, константы это круто, все таки
 h = 150.0
 w = 100.0
 margin = 3.0
@@ -147,7 +151,7 @@ elements = [
       'priority': 2,  
     },
     { 
-      'name': 'address', 
+      'name': 'adres', 
       'type': 'T', 
       'x1': (3 * margin + a_size), 
       'y1': (h-(3 * margin) - dt), 
@@ -239,34 +243,38 @@ elements = [
     },
 ]
 
-current_print_interval_begin = int(time.time())-100*24*60*60
 response = call_api_inst('/tags/%s/media/recent'%TAG, [('client_id', CLIENT_ID)])
-if 'pagination' in response:
-  if 'data' in response:
-    a = response['data']
-  else:
-    # print 'Ошибочка'
-    pass
-  for smth in a:
-    create_pdf(smth)
-  while 'next_url' in response['pagination']:
-    url = response['pagination']['next_url']
-    response = json.loads(urllib2.urlopen(url).read())  
-    if 'data' in response:
-      a = response['data']
-    else:
-      # print 'Ошибочка'
-      pass
-    for smth in a:
-      create_pdf(smth)
-else:
-  if 'data' in response:
-      a = response['data']
-  else:
-    # print 'Ошибочка'
-    pass
-  for smth in a:
-    create_pdf(smth)
-  pass
 
+if 'pagination' in response:
+    if 'data' in response:
+        a = response['data']
+    else:
+        # print 'Ошибочка'
+        pass
+    for smth in a:
+        create_pdf(smth)
+    while 'next_url' in response['pagination']:
+
+       url = response['pagination']['next_url']
+       response = json.loads(urllib2.urlopen(url).read())  
+       if 'data' in response:
+         a = response['data']
+       else:
+         # print 'Ошибочка'
+         pass
+       for smth in a:
+         create_pdf(smth)
+else:
+    if 'data' in response:
+        a = response['data']
+    else:
+        # print 'Ошибочка'
+        pass
+    for smth in a:
+        create_pdf(smth)
+    pass
+  
+
+# alexandret:results Alexandret$ lpr -PSamsung_SCX_4x21_Series 835551343043089489_528383012-5.pdf 
+# alexandret:results Alexandret$ lpq -PSamsung_SCX_4x21_Series
 

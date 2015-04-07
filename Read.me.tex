@@ -1,0 +1,99 @@
+\documentclass[12pt]{article}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage[position=lflt]{floatflt}
+\usetikzlibrary{arrows,%
+                petri,%
+                topaths}%	
+\usepackage{tkz-berge}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{amssymb,amsmath}
+%\usepackage[usenames]{color}
+\usepackage{graphics}
+\usepackage{listings}
+\usepackage{wrapfig}
+\usepackage{lscape}
+\usepackage{longtable}
+\usepackage{hyperref}
+%lstloadlanguages{C}
+\usepackage{indentfirst}
+\usepackage{multirow}
+\usepackage[a4paper, left=20mm, right=20mm, top=15mm, bottom=15mm]{geometry}
+%\usepackage{fancyhdr} %загрузим пакет
+%\pagestyle{fancy} %применим колонтитул
+%\fancyhead{} %очистим хидер на всякий случай
+%\fancyhead[LE,RO]{\thepage} %номер страницы слева сверху на четных и справа на нечетных
+\newcommand{\npl}{\nparallel}
+\newcommand{\ephi}{\varphi}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\tr}{\triangle}
+\newcommand{\D}{\Delta}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\ibu}{\item}
+\newcommand{\de}{\partial}
+\newcommand{\aq}{\alpha}
+\newcommand{\bq}{\beta}
+\renewcommand{\lq}{\lambda}
+\newcommand{\tint}{\int\limits}
+\newcommand{\tlim}{\lim\limits}
+
+\newcommand{\tsum}{\sum\limits}
+\newcommand{\tsumn}{\sum\limits^n_{j =1}}
+\newcommand{\grad}{\vec{\mbox{grad}}}
+\newcommand{\I}{\vec{i}}
+\newcommand{\J}{\vec{j}}
+\newcommand{\K}{\vec{k}}
+\newcommand{\vphi}{\varphi}
+\newcommand{\Rr}{\mathbb{R}}
+\newcommand{\Nn}{\mathbb{N}}
+\newcommand{\Cc}{\mathbb{C}}
+\newcommand{\Zz}{\mathbb{Z}}
+\newcommand{\Dd}{\mathbb{D}}
+\newcommand{\ldo}[1]{\mathcal{L}_n\left[{#1}\right]}
+
+
+\newcommand{\ub}[2]{\underbrace{#1}_{#2}}
+
+\newcommand{\liner}{\medskip\hrule\medskip}
+
+\newcommand{\LRa}{\Leftrightarrow}
+\newcommand{\Ra}{\Rightarrow}
+\newcommand{\La}{\Leftarrow}
+
+\renewcommand{\thesubsection}{\S\arabic{subsection}}
+\renewcommand{\thesection}{ }
+\newcommand{\method}[1]{\fbox{%
+\parbox{17.2cm}{%
+\fbox{%
+\parbox{17cm}{%
+{#1}
+}%
+}
+}%
+}
+}
+
+
+\begin{document}
+Для работы собственного мини-инстапринтера требуются небольшие настройки. 
+\begin{enumerate}
+\item Если у вас всё ещё не установле python, его следует установить. Выбрать и скачать версию 2.x, {\bf не 3.x} 	\url{https://www.python.org/downloads/}
+\item Скачать вспомогательные библиотеки: fpdf \url{https://code.google.com/p/pyfpdf/downloads/list}
+\item На компьютерах с ОС Windows по умолчанию не стоит библиотека curl, ее так же следует установить \url{http://curl.haxx.se/download.html}
+\item Скачиваем наш код \url{https://github.com/alexandrettio/instaprinter}. Скачать надо все папки и все файлы, сохраняя иерархию.
+\item Исправляем ошибку в fpdf. Для этого заходим в папку fpdf, файл template.py, доходим до 60 строки и заменяем  
+\begin{lstlisting}
+value = value.encode("latin1","ignore") 
+\end{lstlisting}
+на
+\begin{lstlisting}
+pass
+\end{lstlisting}
+Производим установку через запуск setup.py в главной папке библиотеки
+\item Открываем файл config.py. И заполняем поля нужными значениями. Сохраняем 
+\item Открываем планировщик задач и создаем новый процесс, который должен запускаться каждые DELTA минут. DELTA указывается в config
+\end{enumerate}
+По возникшим вопросам можно писать мне на основную почту alexandrettio@gmail.com
+\end{document}

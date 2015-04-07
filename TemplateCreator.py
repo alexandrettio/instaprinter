@@ -239,7 +239,7 @@ elements = [
     },
 ]
 
-current_print_interval_begin = int(time.time())-100*24*60*60
+current_print_interval_begin = int(time.time())-config.DELTA*60
 response = call_api_inst('/tags/%s/media/recent'%TAG, [('client_id', CLIENT_ID)])
 if 'pagination' in response:
   if 'data' in response:

@@ -17,7 +17,6 @@ import config
 CLIENT_ID = config.CLIENT_ID
 TAG = config.TAG
 
-current_print_interval_begin = int(time.time())-15*60
 def call_api_inst(method, params):
     url = "https://api.instagram.com/v1/%s?%s" % (method, urlencode(params))
     response = json.loads(urllib2.urlopen(url).read())
@@ -243,8 +242,8 @@ elements = [
     },
 ]
 
+current_print_interval_begin = int(time.time())-config.DELTA*60
 response = call_api_inst('/tags/%s/media/recent'%TAG, [('client_id', CLIENT_ID)])
-
 if 'pagination' in response:
     if 'data' in response:
         a = response['data']

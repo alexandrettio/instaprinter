@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+DELTA = 10
 CLIENT_ID = '0bdd1a4ba0b647f6a5639db417f8af29'
 TAG = 'timeclubkopernik'
 address = 'Юго-Западная, ул. Академика Анохина 4, корпус 3'
